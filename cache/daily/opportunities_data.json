@@ -1,0 +1,60 @@
+{
+  "date": "2025-12-28",
+  "timestamp": "2025-12-28T19:12:50.786042",
+  "opportunities": [
+    {
+      "match": "Bologna x Sassuolo",
+      "competition": "Serie A",
+      "date": "2025-12-28T17:01:00Z",
+      "market": "Bologna -1.5",
+      "odds": 2.74,
+      "bookmaker": "Matchbook",
+      "probability": 0.75,
+      "ev": 105.5,
+      "stake": 15.0,
+      "potential_return": 41.1,
+      "phase": 1
+    },
+    {
+      "match": "Bologna x Sassuolo",
+      "competition": "Serie A",
+      "date": "2025-12-28T17:01:00Z",
+      "market": "Bologna -1.2",
+      "odds": 2.14,
+      "bookmaker": "Bovada",
+      "probability": 0.75,
+      "ev": 60.5,
+      "stake": 15.0,
+      "potential_return": 32.1,
+      "phase": 1
+    },
+    {
+      "match": "Bologna x Sassuolo",
+      "competition": "Serie A",
+      "date": "2025-12-28T17:01:00Z",
+      "market": "Bologna -0.2",
+      "odds": 1.95,
+      "bookmaker": "Pinnacle",
+      "probability": 0.65,
+      "ev": 26.75,
+      "stake": 14.08,
+      "potential_return": 27.46,
+      "phase": 1
+    },
+    {
+      "match": "Bologna x Sassuolo",
+      "competition": "Serie A",
+      "date": "2025-12-28T17:01:00Z",
+      "market": "Over 2.5",
+      "odds": 2.5,
+      "bookmaker": "Unknown",
+      "probability": 0.457,
+      "ev": 14.25,
+      "stake": 4.75,
+      "potential_return": 11.88,
+      "phase": 1
+    }
+  ],
+  "matches_count": 5,
+  "leagues_count": 7
+}

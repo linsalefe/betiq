@@ -1,0 +1,80 @@
+INFO:     Started server process [34220]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:64363 - "OPTIONS /opportunities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64370 - "OPTIONS /opportunities HTTP/1.1" 200 OK
+🔍 Buscando jogos de hoje...
+✅ APIs configuradas. Usando dados reais...
+📊 Buscando Football-Data.org...
+🔍 Buscando jogos de hoje...
+✅ APIs configuradas. Usando dados reais...
+📊 Buscando Football-Data.org...
+INFO:     127.0.0.1:64368 - "GET /phase HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64373 - "GET /phase HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64366 - "GET /statistics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64371 - "GET /statistics HTTP/1.1" 200 OK
+   ✅ 1 jogos (Football-Data)
+📊 Buscando API-Football.com...
+   ✅ 1 jogos (Football-Data)
+📊 Buscando API-Football.com...
+INFO:     127.0.0.1:64371 - "OPTIONS /chat HTTP/1.1" 200 OK
+🔍 Buscando jogos de hoje...
+✅ APIs configuradas. Usando dados reais...
+📊 Buscando Football-Data.org...
+📦 Usando cache (próximos 3 dias)
+   ✅ 1 jogos (Football-Data)
+📊 Buscando API-Football.com...
+📦 Usando cache (API-Football 2025-12-23)
+📦 Usando cache (API-Football 2025-12-24)
+   ✅ 87 jogos (API-Football)
+📊 Total após deduplicação: 88 jogos
+💰 Buscando odds reais...
+   ✅ 87 jogos (API-Football)
+📊 Total após deduplicação: 88 jogos
+💰 Buscando odds reais...
+   ✅ 87 jogos (API-Football)
+📊 Total após deduplicação: 88 jogos
+💰 Buscando odds reais...
+💰 50 jogos com odds disponíveis
+
+🎯 Vitória SC x Sporting Clube de Portugal
+   Mercados disponíveis: ['draw', 'spread_-1.25', 'spread_1.25', 'over_2.5', 'under_2.5', 'spread_-1.5', 'spread_1.5']
+   🔍 Over 2.5 disponível: 1.89
+   🔍 Under 2.5 disponível: 2.08
+   ❌ Under 2.5 sem EV positivo
+
+🎯 Arsenal x Crystal Palace
+   Mercados disponíveis: ['draw', 'over_2.5', 'under_2.5', 'spread_-1.5', 'spread_1.5', 'spread_-1.25', 'spread_1.25', 'over_2.75', 'under_2.75', 'over_3.0', 'under_3.0']
+   🔍 Over 2.5 disponível: 1.74
+   🔍 Under 2.5 disponível: 2.28
+   ❌ Under 2.5 sem EV positivo
+INFO:     127.0.0.1:64363 - "POST /opportunities HTTP/1.1" 200 OK
+💰 50 jogos com odds disponíveis
+
+🎯 Vitória SC x Sporting Clube de Portugal
+   Mercados disponíveis: ['draw', 'spread_-1.25', 'spread_1.25', 'over_2.5', 'under_2.5', 'spread_-1.5', 'spread_1.5']
+   🔍 Over 2.5 disponível: 1.89
+   🔍 Under 2.5 disponível: 2.08
+   ❌ Under 2.5 sem EV positivo
+
+🎯 Arsenal x Crystal Palace
+   Mercados disponíveis: ['draw', 'over_2.5', 'under_2.5', 'spread_-1.5', 'spread_1.5', 'spread_-1.25', 'spread_1.25', 'over_2.75', 'under_2.75', 'over_3.0', 'under_3.0']
+   🔍 Over 2.5 disponível: 1.74
+   🔍 Under 2.5 disponível: 2.28
+   ❌ Under 2.5 sem EV positivo
+INFO:     127.0.0.1:64370 - "POST /opportunities HTTP/1.1" 200 OK
+💰 50 jogos com odds disponíveis
+
+🎯 Vitória SC x Sporting Clube de Portugal
+   Mercados disponíveis: ['draw', 'spread_-1.25', 'spread_1.25', 'over_2.5', 'under_2.5', 'spread_-1.5', 'spread_1.5']
+   🔍 Over 2.5 disponível: 1.89
+   🔍 Under 2.5 disponível: 2.08
+   ❌ Under 2.5 sem EV positivo
+
+🎯 Arsenal x Crystal Palace
+   Mercados disponíveis: ['draw', 'over_2.5', 'under_2.5', 'spread_-1.5', 'spread_1.5', 'spread_-1.25', 'spread_1.25', 'over_2.75', 'under_2.75', 'over_3.0', 'under_3.0']
+   🔍 Over 2.5 disponível: 1.74
+   🔍 Under 2.5 disponível: 2.28
+   ❌ Under 2.5 sem EV positivo
+INFO:     127.0.0.1:64371 - "POST /chat HTTP/1.1" 200 OK
