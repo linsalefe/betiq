@@ -78,10 +78,26 @@ def _needs_context(message: str) -> bool:
 
 
 def _build_context(bankroll: float) -> Dict:
-    """Constrói contexto inteligente para o LLM"""
-    agent = BettingAgent(bankroll)
-    opportunities = agent.analyze_today_opportunities()
-    phase_info = agent.bankroll_manager.get_phase_info()
+    """Constrói contexto inteligente para o LLM usando APENAS cache"""
+    from src.cache.daily_cache import DailyCache
+    
+    # 📦 USA APENAS O CACHE - NUNCA RECALCULA
+    cached_data = DailyCache.load_today_data()
+    
+    if not cached_data:
+        print("   ⚠️ Sem cache disponível - retornando vazio")
+        return {
+            'date': datetime.now().strftime('%d/%m/%Y'),
+            'total_opportunities': 0,
+            'total_games': 0,
+            'opportunities': [],
+            'games': [],
+            'phase': 1,
+            'bankroll': bankroll,
+            'min_ev': 8.0
+        }
+    
+    opportunities = cached_data['opportunities']
     
     # Organiza oportunidades por jogo
     games = {}
@@ -95,6 +111,10 @@ def _build_context(bankroll: float) -> Dict:
                 'opportunities': []
             }
         games[match_key]['opportunities'].append(opp)
+    
+    # Busca info da fase (isso não consome API)
+    agent = BettingAgent(bankroll)
+    phase_info = agent.bankroll_manager.get_phase_info()
     
     return {
         'date': datetime.now().strftime('%d/%m/%Y'),

@@ -35,7 +35,7 @@ class OddsAPI:
         """
         cache_key = "odds:available_soccer_sports"
 
-        cached = None  # self.cache.get(cache_key)  # REDIS DESABILITADO
+        cached = self.cache.get(cache_key)  # ✅ CACHE REATIVADO
         if cached:
             print("📦 Usando cache (ligas de futebol)")
             return cached
@@ -57,7 +57,7 @@ class OddsAPI:
             if sport.get("active") and str(sport.get("key", "")).startswith("soccer_")
         ]
 
-        # self.cache.set(cache_key, soccer_sports, expire_seconds=86400)  # REDIS DESABILITADO
+        self.cache.set(cache_key, soccer_sports, expire_seconds=86400)  # ✅ CACHE REATIVADO
         print(f"⚽ {len(soccer_sports)} ligas de futebol encontradas")
 
         return soccer_sports
@@ -73,7 +73,7 @@ class OddsAPI:
         """
         cache_key = f"odds:{sport}:{datetime.now().strftime('%Y-%m-%d')}"
 
-        cached = None  # self.cache.get(cache_key)  # REDIS DESABILITADO
+        cached = self.cache.get(cache_key)  # ✅ CACHE REATIVADO
         if cached:
             print(f"📦 Usando cache (odds {sport})")
             return cached
@@ -94,7 +94,7 @@ class OddsAPI:
         response.raise_for_status()
 
         formatted = self._format_odds(response.json())
-        # self.cache.set(cache_key, formatted, expire_seconds=43200)  # REDIS DESABILITADO  # 12 HORAS
+        self.cache.set(cache_key, formatted, expire_seconds=43200)  # ✅ CACHE REATIVADO - 12 HORAS
 
         # DEBUG: Mostra estrutura de markets do primeiro jogo
         if formatted and len(formatted) > 0:

@@ -58,7 +58,7 @@ class BettingAgent:
         
         # 🎯 VERIFICA CACHE DIÁRIO PRIMEIRO
         cached_data = DailyCache.load_today_data()
-        if False and cached_data:  # FORÇANDO NOVA BUSCA
+        if and cached_data:  # FORÇANDO NOVA BUSCA
             print(f"   ✅ Já buscamos hoje! ({cached_data['matches_count']} jogos, {cached_data['leagues_count']} ligas)")
             print(f"   ✅ {len(cached_data['opportunities'])} oportunidades em cache")
             return cached_data['opportunities']
