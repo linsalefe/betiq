@@ -49,3 +49,21 @@ Thumbs.db
 # Ambiente
 ENVIRONMENT=developmentnode_modules/
 .env.backup
+
+# Arquivos Mac
+._*
+.DS_Store
+
+# Arquivos sensíveis
+.env
+.env.production
+.env.local
+
+# Backups
+*_backup.py
+*-backup/
+
+# Cache
+cache/
+__pycache__/
+*.pyc
