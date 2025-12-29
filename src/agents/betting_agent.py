@@ -368,14 +368,12 @@ class BettingAgent:
         home_team_data = {
             'base_avg_scored': home_venue_stats['avg_scored'],
             'base_avg_conceded': home_venue_stats['avg_conceded'],
-            'recent_form': ['W', 'W', 'W', 'W', 'W'],
             'is_home': True
         }
         
         away_team_data = {
             'base_avg_scored': away_venue_stats['avg_scored'],
             'base_avg_conceded': away_venue_stats['avg_conceded'],
-            'recent_form': ['W', 'W', 'W', 'W', 'W'],
             'is_home': False
         }
         
@@ -580,6 +578,12 @@ class BettingAgent:
         
         # Usa probabilidade de UNDER
         
+        is_valid, ev = self.probability_model.validate_opportunity(
+            probs["prob_under"],
+            market_odds,
+            phase_info["min_ev"]
+        )
+        
         if not is_valid:
             return None
         
@@ -625,6 +629,12 @@ class BettingAgent:
         # Calcula probabilidades usando lambdas
         probs = self.probability_model.calculate_handicap(home_lambda, away_lambda, line)
         
+        
+        is_valid, ev = self.probability_model.validate_opportunity(
+            probs["prob_home"],
+            market_odds,
+            phase_info["min_ev"]
+        )
         
         if not is_valid:
             return None
@@ -672,6 +682,12 @@ class BettingAgent:
         # Calcula probabilidade de BTTS usando lambdas
         prob_btts = self.probability_model.calculate_btts_from_lambdas(home_lambda, away_lambda)
         
+        
+        is_valid, ev = self.probability_model.validate_opportunity(
+            prob_btts,
+            market_odds,
+            phase_info["min_ev"]
+        )
         
         if not is_valid:
             return None

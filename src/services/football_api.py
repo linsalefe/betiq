@@ -101,12 +101,44 @@ class FootballAPI:
         games = len(goals_scored)
         
         return {
+            'recent_form': self._extract_recent_form(matches, team_id, is_home),
             'games': games,
             'goals_scored': sum(goals_scored),
             'goals_conceded': sum(goals_conceded),
             'avg_scored': round(sum(goals_scored) / games, 2) if games > 0 else 0.0,
             'avg_conceded': round(sum(goals_conceded) / games, 2) if games > 0 else 0.0
         }
+    def _extract_recent_form(self, matches: List[Dict], team_id: int, is_home: bool, limit: int = 5) -> List[str]:
+        """Extrai forma recente (últimos N jogos): W, D, L"""
+        form = []
+        
+        for match in matches[:limit]:  # Últimos N jogos
+            score = match.get("score", {}).get("fullTime", {})
+            if not score:
+                continue
+            
+            home_score = score.get("home")
+            away_score = score.get("away")
+            
+            if home_score is None or away_score is None:
+                continue
+            
+            if is_home:
+                if home_score > away_score:
+                    form.append("W")
+                elif home_score < away_score:
+                    form.append("L")
+                else:
+                    form.append("D")
+            else:
+                if away_score > home_score:
+                    form.append("W")
+                elif away_score < home_score:
+                    form.append("L")
+                else:
+                    form.append("D")
+        
+        return form
     
     @retry_on_rate_limit(max_retries=3)
     def get_team_id_by_name(self, team_name: str, competition_code: str = 'PL') -> Optional[int]:
