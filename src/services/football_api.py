@@ -111,9 +111,11 @@ class FootballAPI:
     @retry_on_rate_limit(max_retries=3)
     def get_team_id_by_name(self, team_name: str, competition_code: str = 'PL') -> Optional[int]:
         """
-        Busca ID do time pelo nome na competição
+        Busca ID do time pelo nome na competição com FUZZY MATCHING
         Cache: 7 dias (nomes não mudam)
         """
+        from thefuzz import fuzz
+        
         cache_key = f"team_id:{competition_code}:{team_name}"
         
         # Tenta cache
@@ -128,18 +130,71 @@ class FootballAPI:
             
             teams = response.json().get('teams', [])
             
-            # Busca por nome exato ou similar
-            for team in teams:
-                if team['name'] == team_name or team.get('shortName') == team_name:
-                    team_id = team['id']
-                    # Cache por 7 dias
-                    self.cache.set(cache_key, team_id, expire_seconds=604800)
-                    return team_id
+            # Normaliza nome buscado
+            normalized_search = self._normalize_team_name(team_name)
             
+            best_match = None
+            best_score = 0
+            
+            # Busca melhor match com fuzzy
+            for team in teams:
+                team_names = [
+                    team.get('name', ''),
+                    team.get('shortName', ''),
+                    team.get('tla', '')
+                ]
+                
+                for name in team_names:
+                    if not name:
+                        continue
+                        
+                    normalized_name = self._normalize_team_name(name)
+                    
+                    # Calcula similaridade
+                    score = fuzz.ratio(normalized_search, normalized_name)
+                    
+                    if score > best_score:
+                        best_score = score
+                        best_match = team['id']
+            
+            # Aceita match com 70%+ de similaridade
+            if best_score >= 70:
+                print(f"   ✅ Match: '{team_name}' → {best_score}% similar")
+                # Cache por 7 dias
+                self.cache.set(cache_key, best_match, expire_seconds=604800)
+                return best_match
+            
+            print(f"   ❌ Nenhum match para '{team_name}' em {competition_code} (melhor: {best_score}%)")
             return None
+            
         except Exception as e:
             print(f"❌ Erro ao buscar ID do time {team_name}: {e}")
             return None
+    
+    def _normalize_team_name(self, name: str) -> str:
+        """Normaliza nome do time para melhor matching"""
+        import re
+        import unicodedata
+        
+        # Remove acentos
+        name = unicodedata.normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
+        
+        # Lower case
+        name = name.lower()
+        
+        # Remove prefixos comuns
+        prefixes = ['fc', 'cf', 'ac', 'sc', 'afc', 'cd', 'ssd', 'fc', 'real', 'club']
+        for prefix in prefixes:
+            name = re.sub(f'^{prefix}\\s+', '', name)
+            name = re.sub(f'\\s+{prefix}$', '', name)
+        
+        # Remove caracteres especiais
+        name = re.sub(r'[^a-z0-9\s]', '', name)
+        
+        # Remove espaços extras
+        name = ' '.join(name.split())
+        
+        return name.strip()
     
     # Métodos originais mantidos...
     @retry_on_rate_limit(max_retries=3)
@@ -181,3 +236,4 @@ class FootballAPI:
                 'status': match['status']
             })
         return formatted
+    

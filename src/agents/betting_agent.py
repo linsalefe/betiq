@@ -31,10 +31,12 @@ class BettingAgent:
     # Mapeamento de ligas The Odds API → Football-Data
     LEAGUE_MAPPING = {
         'soccer_epl': 'PL',                    # Premier League
+        'soccer_efl_champ': 'ELC',            # Championship ✅ ADICIONADO
         'soccer_italy_serie_a': 'SA',         # Serie A
         'soccer_portugal_primeira_liga': 'PPL', # Primeira Liga
         'soccer_spain_la_liga': 'PD',         # La Liga
         'soccer_germany_bundesliga': 'BL1',   # Bundesliga
+        'soccer_germany_bundesliga2': 'BL2',  # Bundesliga 2 ✅ ADICIONADO
         'soccer_brazil_campeonato': 'BSA',    # Brasileirão
     }
 
@@ -58,7 +60,7 @@ class BettingAgent:
         
         # 🎯 VERIFICA CACHE DIÁRIO PRIMEIRO
         cached_data = DailyCache.load_today_data()
-        if and cached_data:  # FORÇANDO NOVA BUSCA
+        if cached_data:  # ✅ CACHE REATIVADO
             print(f"   ✅ Já buscamos hoje! ({cached_data['matches_count']} jogos, {cached_data['leagues_count']} ligas)")
             print(f"   ✅ {len(cached_data['opportunities'])} oportunidades em cache")
             return cached_data['opportunities']
