@@ -79,7 +79,7 @@ def _needs_context(message: str) -> bool:
 
 def _build_context(bankroll: float) -> Dict:
     """Constrói contexto inteligente para o LLM usando APENAS cache"""
-    from src.cache.daily_cache import DailyCache
+    from src.utils.daily_cache import DailyCache
     
     # 📦 USA APENAS O CACHE - NUNCA RECALCULA
     cached_data = DailyCache.load_today_data()

@@ -466,11 +466,6 @@ class BettingAgent:
             elif should_debug:
                 # Calcula manualmente para debug
                 probs = self.probability_model.calculate_over_under(home_stats['avg_scored'], away_stats['avg_scored'], 2.5)
-                is_valid, ev = self.probability_model.validate_opportunity(probs['prob_over'], markets['over_2.5'], phase_info['min_ev'])
-                print(f"   ❌ Over 2.5 @ {markets['over_2.5']} - EV: {ev:.1f}% - Prob: {probs['prob_over']*100:.1f}%")
-        
-        # 2. Under 2.5
-        if 'under_2.5' in markets:
             opp = self._analyze_under(match, odds, home_stats, away_stats, 2.5, markets['under_2.5'], phase_info)
             if opp:
                 opportunities.append(opp)
@@ -478,11 +473,6 @@ class BettingAgent:
                     print(f"   ✅ Under 2.5 @ {markets['under_2.5']} - EV: {opp['ev']:.1f}% - Prob: {opp['probability']*100:.1f}%")
             elif should_debug:
                 probs = self.probability_model.calculate_over_under(home_stats['avg_scored'], away_stats['avg_scored'], 2.5)
-                is_valid, ev = self.probability_model.validate_opportunity(probs['prob_under'], markets['under_2.5'], phase_info['min_ev'])
-                print(f"   ❌ Under 2.5 @ {markets['under_2.5']} - EV: {ev:.1f}% - Prob: {probs['prob_under']*100:.1f}%")
-        
-        # 3. Handicaps
-        handicap_count = 0
         for spread_key in markets.keys():
             if spread_key.startswith('spread_'):
                 parts = spread_key.split('_')
@@ -534,7 +524,7 @@ class BettingAgent:
         probs = self.probability_model.calculate_over_under(home_lambda, away_lambda, line)
         
         # 🎯 FILTRO 2: EV mínimo de +25%
-        min_ev_required = max(phase_info['min_ev'], 0.25)  # No mínimo 25%
+        min_ev_required = max(phase_info["min_ev"], 25.0)  # No mínimo 25%
         
         is_valid, ev = self.probability_model.validate_opportunity(
             probs['prob_over'], 
@@ -542,11 +532,6 @@ class BettingAgent:
             min_ev_required
         )
 
-        is_valid, ev = self.probability_model.validate_opportunity(
-            probs['prob_over'], 
-            market_odds, 
-            phase_info['min_ev']
-        )
         
         if not is_valid:
             return None
@@ -594,11 +579,6 @@ class BettingAgent:
         probs = self.probability_model.calculate_over_under(home_lambda, away_lambda, line)
         
         # Usa probabilidade de UNDER
-        is_valid, ev = self.probability_model.validate_opportunity(
-            probs['prob_under'], 
-            market_odds, 
-            phase_info['min_ev']
-        )
         
         if not is_valid:
             return None
@@ -645,11 +625,6 @@ class BettingAgent:
         # Calcula probabilidades usando lambdas
         probs = self.probability_model.calculate_handicap(home_lambda, away_lambda, line)
         
-        is_valid, ev = self.probability_model.validate_opportunity(
-            probs['prob_home_cover'], 
-            market_odds, 
-            phase_info['min_ev']
-        )
         
         if not is_valid:
             return None
@@ -697,11 +672,6 @@ class BettingAgent:
         # Calcula probabilidade de BTTS usando lambdas
         prob_btts = self.probability_model.calculate_btts_from_lambdas(home_lambda, away_lambda)
         
-        is_valid, ev = self.probability_model.validate_opportunity(
-            prob_btts, 
-            market_odds, 
-            phase_info['min_ev']
-        )
         
         if not is_valid:
             return None
