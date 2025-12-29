@@ -194,6 +194,9 @@ class OddsAPI:
 
     def _extract_h2h(self, market: Dict, markets_dict: Dict, bookmaker_name: str):
         """Extrai 1X2 (casa, empate, fora)"""
+        home_team = None
+        away_team = None
+        
         for outcome in market.get("outcomes", []):
             name = outcome.get("name", "")
             price = outcome.get("price")
@@ -201,15 +204,25 @@ class OddsAPI:
             if price is None:
                 continue
             
-            # Extrai empate (pode ser usado futuramente)
+            # Identifica home/away/draw
             if name == "Draw":
                 key = "draw"
-                if key not in markets_dict:
-                    markets_dict[key] = {"odd": price, "bookmaker": bookmaker_name}
-                elif isinstance(markets_dict[key], dict) and price > markets_dict[key].get("odd", 0):
-                    markets_dict[key] = {"odd": price, "bookmaker": bookmaker_name}
-                elif not isinstance(markets_dict[key], dict) and price > markets_dict[key]:
-                    markets_dict[key] = {"odd": price, "bookmaker": bookmaker_name}
+            elif home_team is None:
+                home_team = name
+                key = "home_ml"
+            elif away_team is None:
+                away_team = name
+                key = "away_ml"
+            else:
+                continue
+            
+            # Salva odd com maior valor
+            if key not in markets_dict:
+                markets_dict[key] = {"odd": price, "bookmaker": bookmaker_name}
+            elif isinstance(markets_dict[key], dict) and price > markets_dict[key].get("odd", 0):
+                markets_dict[key] = {"odd": price, "bookmaker": bookmaker_name}
+            elif not isinstance(markets_dict[key], dict) and price > markets_dict[key]:
+                markets_dict[key] = {"odd": price, "bookmaker": bookmaker_name}
 
     def _extract_spreads(self, market: Dict, markets_dict: Dict, bookmaker_name: str):
         """Extrai Handicaps/Spreads"""
