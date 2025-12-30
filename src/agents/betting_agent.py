@@ -8,6 +8,7 @@ from src.services.api_football_service import APIFootballService
 from src.utils.daily_cache import DailyCache
 from src.services.team_matcher import TeamMatcher
 from src.services.odds_api import OddsAPI
+from src.utils.rejection_logger import RejectionLogger
 from src.utils.validators import OpportunityValidator
 from src.utils.reporter import Reporter
 from src.utils.multiple_detector import MultipleDetector
@@ -51,6 +52,7 @@ class BettingAgent:
         self.odds_api = OddsAPI()
         self.bet_history = BetHistory()
         self.risk_manager = RiskManager(current_bankroll, self.bankroll_manager.phase)
+        self.rejection_logger = RejectionLogger()
 
     def analyze_today_opportunities(self) -> List[Dict]:
         """Analisa todas oportunidades do dia usando The Odds API + API-Football"""
@@ -516,6 +518,13 @@ class BettingAgent:
         if line == 2.5 and expected_goals < 3.2:
             if hasattr(self, '_debug_count') and self._debug_count <= 5:
                 print(f"   ❌ Over {line} rejeitado: apenas {expected_goals:.2f} gols esperados (mín: 3.2)")
+            self.rejection_logger.log_rejection(
+                match=f"{match["home_team"]} x {match["away_team"]}", 
+                market=f"Over {line}", 
+                reason="insufficient_expected_goals", 
+                details={"expected_goals": round(expected_goals, 2), "minimum": 3.2}, 
+                competition=match.get("competition", "N/A")
+            )
             return None
         
         # Calcula probabilidades usando lambdas
@@ -532,6 +541,13 @@ class BettingAgent:
 
         
         if not is_valid:
+            self.rejection_logger.log_rejection(
+                match=f"{match["home_team"]} x {match["away_team"]}", 
+                market=f"Over {line}", 
+                reason="insufficient_ev", 
+                details={"ev": round(ev, 2), "min_required": round(min_ev_required, 2), "odds": market_odds}, 
+                competition=match.get("competition", "N/A")
+            )
             return None
         
         stake = self.bankroll_manager.calculate_stake(
@@ -585,6 +601,13 @@ class BettingAgent:
         )
         
         if not is_valid:
+            self.rejection_logger.log_rejection(
+                match=f"{match["home_team"]} x {match["away_team"]}", 
+                market=f"Under {line}", 
+                reason="insufficient_ev", 
+                details={"ev": round(ev, 2), "min_required": round(phase_info["min_ev"], 2), "odds": market_odds}, 
+                competition=match.get("competition", "N/A")
+            )
             return None
         
         stake = self.bankroll_manager.calculate_stake(
@@ -637,6 +660,13 @@ class BettingAgent:
         )
         
         if not is_valid:
+            self.rejection_logger.log_rejection(
+                match=f"{match["home_team"]} x {match["away_team"]}", 
+                market=f"{match["home_team"]} {line:+.1f}", 
+                reason="insufficient_ev", 
+                details={"ev": round(ev, 2), "min_required": round(phase_info["min_ev"], 2), "odds": market_odds}, 
+                competition=match.get("competition", "N/A")
+            )
             return None
         
         stake = self.bankroll_manager.calculate_stake(
@@ -690,6 +720,13 @@ class BettingAgent:
         )
         
         if not is_valid:
+            self.rejection_logger.log_rejection(
+                match=f"{match["home_team"]} x {match["away_team"]}", 
+                market="BTTS Yes", 
+                reason="insufficient_ev", 
+                details={"ev": round(ev, 2), "min_required": round(phase_info["min_ev"], 2), "odds": market_odds}, 
+                competition=match.get("competition", "N/A")
+            )
             return None
         
         stake = self.bankroll_manager.calculate_stake(prob_btts, market_odds, ev)
