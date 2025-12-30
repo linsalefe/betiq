@@ -473,6 +473,7 @@ class BettingAgent:
                     print(f"   ✅ Under 2.5 @ {markets['under_2.5']} - EV: {opp['ev']:.1f}% - Prob: {opp['probability']*100:.1f}%")
             elif should_debug:
                 probs = self.probability_model.calculate_over_under(home_stats['avg_scored'], away_stats['avg_scored'], 2.5)
+        handicap_count = 0
         for spread_key in markets.keys():
             if spread_key.startswith('spread_'):
                 parts = spread_key.split('_')
@@ -654,7 +655,7 @@ class BettingAgent:
         
         
         is_valid, ev = self.probability_model.validate_opportunity(
-            probs["prob_home"],
+            probs["prob_home_cover"],
             market_odds,
             phase_info["min_ev"]
         )
